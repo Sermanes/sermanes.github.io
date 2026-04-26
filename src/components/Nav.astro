@@ -1,0 +1,28 @@
+---
+const links = [
+  { href: '#casos', label: 'Casos' },
+  { href: '#servicios', label: 'Servicios' },
+  { href: '#experiencia', label: 'Experiencia' },
+  { href: '#stack', label: 'Stack' },
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+<header class="sticky top-0 z-50 backdrop-blur-md bg-bg/70 border-b border-border/60">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href="/" class="font-mono font-bold text-accent tracking-tight">
+      <span class="text-muted">~/</span>sergio<span class="text-accent2">.sh</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-8 text-sm text-muted">
+      {links.map((l) => (
+        <li><a href={l.href} class="hover:text-fg transition">{l.label}</a></li>
+      ))}
+    </ul>
+    <a
+      href="#contacto"
+      class="text-sm font-medium px-4 py-2 rounded-md bg-accent text-bg hover:bg-accent/90 transition"
+    >
+      Contratar
+    </a>
+  </nav>
+</header>

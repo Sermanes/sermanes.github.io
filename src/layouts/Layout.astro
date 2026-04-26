@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '@fontsource/jetbrains-mono/700.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'Sergio Herrero — Senior SRE & Platform Engineer',
+  description = 'Senior SRE / Platform Engineer. 8+ años con Kubernetes, GCP, AWS, Terraform, Go. Construyo plataformas internas, IaC, observabilidad y FinOps.',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-bg text-fg font-sans antialiased selection:bg-accent/30">
+    <div class="fixed inset-0 -z-10 pointer-events-none">
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(57,217,138,0.08),transparent_50%)]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(122,183,255,0.06),transparent_50%)]"></div>
+      <div class="absolute inset-0 opacity-[0.015] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:32px_32px]"></div>
+    </div>
+    <slot />
+  </body>
+</html>
+<style is:global>
+  html { scrollbar-gutter: stable; }
+  ::selection { color: #0a0e14; }
+</style>
