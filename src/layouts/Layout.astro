@@ -11,14 +11,16 @@ import '@fontsource/jetbrains-mono/700.css';
 export interface Props {
   title?: string;
   description?: string;
+  lang?: string;
 }
 const {
   title = 'Sergio Herrero — Senior SRE & Platform Engineer',
   description = 'Senior SRE / Platform Engineer. 8+ años con Kubernetes, GCP, AWS, Terraform, Go. Construyo plataformas internas, IaC, observabilidad y FinOps.',
+  lang = 'es',
 } = Astro.props;
 ---
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
