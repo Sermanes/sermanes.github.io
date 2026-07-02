@@ -14,10 +14,12 @@ export interface Props {
   lang?: string;
 }
 const {
-  title = 'Sergio Herrero — Senior SRE & Platform Engineer',
-  description = 'Senior SRE / Platform Engineer. 8+ años con Kubernetes, GCP, AWS, Terraform, Go. Construyo plataformas internas, IaC, observabilidad y FinOps.',
+  title = 'Sergio Herrero — Consultor de infraestructura cloud y DevOps',
+  description = 'Hago que tu web y tus sistemas funcionen siempre: evito caídas, reduzco tu factura cloud (AWS/GCP) y preparo tu tecnología para crecer. Consultor SRE/DevOps con 8+ años de experiencia.',
   lang = 'es',
 } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/og.png', Astro.site);
 ---
 <!doctype html>
 <html lang={lang} class="scroll-smooth">
@@ -29,11 +31,39 @@ const {
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index, follow" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" />
+    <link rel="canonical" href={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{title}</title>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ProfessionalService',
+      name: 'Sergio Herrero — Consultoría de infraestructura cloud y DevOps',
+      url: 'https://sermanes.github.io',
+      image: 'https://sermanes.github.io/og.png',
+      description: 'Consultoría de fiabilidad, coste y escalabilidad de sistemas: monitorización, reducción de factura cloud, automatización de despliegues y migraciones a Kubernetes.',
+      founder: {
+        '@type': 'Person',
+        name: 'Sergio Herrero',
+        jobTitle: 'Site Reliability Engineer / Platform Engineer',
+        sameAs: [
+          'https://www.linkedin.com/in/sergioherrerocruz',
+          'https://github.com/sermanes',
+        ],
+      },
+      areaServed: 'ES',
+      knowsAbout: ['Kubernetes', 'Google Cloud', 'AWS', 'Terraform', 'DevOps', 'SRE', 'FinOps', 'CI/CD'],
+    })} />
   </head>
   <body class="bg-bg text-fg font-sans antialiased selection:bg-accent/30">
     <div class="fixed inset-0 -z-10 pointer-events-none">
