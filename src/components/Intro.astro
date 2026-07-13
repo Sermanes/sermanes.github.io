@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/personal.png';
+import { getLangFromUrl, useTranslations } from '../i18n';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section class="max-w-4xl mx-auto px-6 pt-20 pb-12">
+  <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-8">
+    <div class="flex-1">
+      <div class="font-mono text-sm text-accent mb-3">{t('home.role')}</div>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-fg mb-4">Sergio Herrero</h1>
+      <p class="text-lg text-muted leading-relaxed max-w-xl">{t('home.bio')}</p>
+    </div>
+    <Image
+      src={portrait}
+      alt="Sergio Herrero"
+      widths={[160, 240, 320]}
+      sizes="160px"
+      quality={85}
+      format="webp"
+      loading="eager"
+      class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border border-border"
+    />
+  </div>
+</section>

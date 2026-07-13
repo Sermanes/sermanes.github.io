@@ -1,0 +1,43 @@
+---
+import Intro from './Intro.astro';
+import BlogCard from './BlogCard.astro';
+import { getLangFromUrl, useTranslations, localizePath } from '../i18n';
+import { getPosts, postSlug } from '../lib/posts';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const posts = (await getPosts(lang)).slice(0, 3);
+---
+<Intro />
+
+{posts.length > 0 && (
+  <section class="max-w-4xl mx-auto px-6 py-12">
+    <div class="mb-8 flex items-end justify-between">
+      <h2 class="text-2xl font-semibold tracking-tight text-fg">{t('home.latest')}</h2>
+      <a href={localizePath('/blog', lang)} class="text-sm text-accent hover:text-accent2">{t('home.viewAll')} →</a>
+    </div>
+    <ul class="grid gap-6 sm:grid-cols-3">
+      {posts.map((post) => (
+        <li>
+          <BlogCard
+            href={localizePath(`/blog/${postSlug(post)}`, lang)}
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+          />
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section class="max-w-4xl mx-auto px-6 py-12 border-t border-border">
+  <h2 class="text-2xl font-semibold tracking-tight text-fg mb-4">{t('home.aboutHeading')}</h2>
+  <p class="text-muted leading-relaxed max-w-2xl mb-6">{t('about.intro')}</p>
+  <div class="flex flex-wrap gap-4 text-sm">
+    <a href={localizePath('/about', lang)} class="text-accent hover:text-accent2">{t('home.aboutMore')} →</a>
+    <a href="https://www.linkedin.com/in/sergioherrerocruz" target="_blank" rel="noopener" class="text-muted hover:text-fg">LinkedIn ↗</a>
+    <a href="https://github.com/sermanes" target="_blank" rel="noopener" class="text-muted hover:text-fg">GitHub ↗</a>
+  </div>
+</section>
