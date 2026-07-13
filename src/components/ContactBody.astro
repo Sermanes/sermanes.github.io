@@ -1,0 +1,24 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const email = 'contactoprofesional.designing636@passmail.net';
+---
+<main class="mx-auto max-w-3xl px-6 py-16">
+  <header class="mb-10">
+    <h1 class="text-4xl font-semibold tracking-tight text-fg">{t('contact.title')}</h1>
+    <p class="mt-4 text-lg text-muted leading-relaxed max-w-xl">{t('contact.intro')}</p>
+  </header>
+  <ul class="space-y-3 text-lg">
+    <li>
+      <span class="text-muted">{t('contact.email')}: </span>
+      <a href={`mailto:${email}`} class="text-accent hover:text-accent2 break-all">{email}</a>
+    </li>
+    <li>
+      <a href="https://www.linkedin.com/in/sergioherrerocruz" target="_blank" rel="noopener" class="text-accent hover:text-accent2">LinkedIn ↗</a>
+    </li>
+    <li>
+      <a href="https://github.com/sermanes" target="_blank" rel="noopener" class="text-accent hover:text-accent2">GitHub ↗</a>
+    </li>
+  </ul>
+</main>
