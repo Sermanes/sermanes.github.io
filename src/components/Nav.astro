@@ -29,6 +29,25 @@ const links = [
       </ul>
       <LangSwitch altPath={altPath} />
       <ThemeToggle />
+      <button
+        id="nav-menu-toggle"
+        type="button"
+        class="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted hover:text-fg hover:border-accent/50 transition"
+        aria-label={t('nav.menu')}
+        aria-controls="nav-menu-panel"
+        aria-expanded="false"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
     </div>
   </nav>
+  <div id="nav-menu-panel" hidden class="sm:hidden border-t border-border/60 bg-bg/95 backdrop-blur-md">
+    <ul class="max-w-4xl mx-auto px-6 py-3 flex flex-col gap-1 text-sm text-muted">
+      {links.map((l) => (
+        <li><a href={l.href} class="block py-2 hover:text-fg transition">{l.label}</a></li>
+      ))}
+    </ul>
+  </div>
 </header>
+
+<script is:inline src="/nav-menu.js" defer></script>
