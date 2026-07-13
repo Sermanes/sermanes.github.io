@@ -7,7 +7,7 @@ import '@fontsource/inter/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
-import { getLangFromUrl, useTranslations, type Lang } from '../i18n';
+import { getLangFromUrl, useTranslations, stripLangPrefix, localizePath, type Lang } from '../i18n';
 
 export interface Props {
   title?: string;
@@ -22,6 +22,11 @@ const {
   description = t('site.description'),
   lang = urlLang,
 } = Astro.props;
+
+const site = Astro.site ?? new URL('https://sermanes.github.io');
+const basePath = stripLangPrefix(Astro.url.pathname);
+const esHref = new URL(localizePath(basePath, 'es'), site).href;
+const enHref = new URL(localizePath(basePath, 'en'), site).href;
 ---
 <!doctype html>
 <html lang={lang} class="scroll-smooth">
@@ -34,6 +39,9 @@ const {
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index, follow" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" />
+    <link rel="alternate" hreflang="es" href={esHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={esHref} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -45,6 +53,9 @@ const {
       <div class="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:32px_32px] text-fg"></div>
     </div>
     <slot />
+    <footer class="max-w-4xl mx-auto px-6 py-10 text-sm text-muted font-mono border-t border-border">
+      © {new Date().getFullYear()} Sergio Herrero — {t('footer.built')}
+    </footer>
   </body>
 </html>
 <style is:global>
