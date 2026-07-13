@@ -1,28 +1,53 @@
 ---
+import { getLangFromUrl, useTranslations, localizePath } from '../i18n';
+import LangSwitch from './LangSwitch.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props { altPath?: string }
+const { altPath } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const links = [
-  { href: '#casos', label: 'Casos' },
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#experiencia', label: 'Experiencia' },
-  { href: '#stack', label: 'Stack' },
-  { href: '#proyectos', label: 'Proyectos' },
-  { href: '#contacto', label: 'Contacto' },
+  { href: localizePath('/', lang), label: t('nav.home') },
+  { href: localizePath('/blog', lang), label: t('nav.blog') },
+  { href: localizePath('/about', lang), label: t('nav.about') },
+  { href: localizePath('/contact', lang), label: t('nav.contact') },
 ];
 ---
 <header class="sticky top-0 z-50 backdrop-blur-md bg-bg/70 border-b border-border/60">
-  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="/" class="font-mono font-bold text-accent tracking-tight">
-      <span class="text-muted">~/</span>sergio<span class="text-accent2">.sh</span>
+  <nav class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href={localizePath('/', lang)} class="font-mono font-bold text-fg tracking-tight">
+      sergio<span class="text-accent">.dev</span>
     </a>
-    <ul class="hidden md:flex items-center gap-8 text-sm text-muted">
+    <div class="flex items-center gap-6">
+      <ul class="hidden sm:flex items-center gap-6 text-sm text-muted">
+        {links.map((l) => (
+          <li><a href={l.href} class="hover:text-fg transition">{l.label}</a></li>
+        ))}
+      </ul>
+      <LangSwitch altPath={altPath} />
+      <ThemeToggle />
+      <button
+        id="nav-menu-toggle"
+        type="button"
+        class="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted hover:text-fg hover:border-accent/50 transition"
+        aria-label={t('nav.menu')}
+        aria-controls="nav-menu-panel"
+        aria-expanded="false"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div id="nav-menu-panel" hidden class="sm:hidden border-t border-border/60 bg-bg/95 backdrop-blur-md">
+    <ul class="max-w-4xl mx-auto px-6 py-3 flex flex-col gap-1 text-sm text-muted">
       {links.map((l) => (
-        <li><a href={l.href} class="hover:text-fg transition">{l.label}</a></li>
+        <li><a href={l.href} class="block py-2 hover:text-fg transition">{l.label}</a></li>
       ))}
     </ul>
-    <a
-      href="#contacto"
-      class="text-sm font-medium px-4 py-2 rounded-md bg-accent text-bg hover:bg-accent/90 transition"
-    >
-      Contratar
-    </a>
-  </nav>
+  </div>
 </header>
+
+<script is:inline src="/nav-menu.js" defer></script>

@@ -1,11 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
-import BlogList from '../../components/BlogList.astro';
+import ContactBody from '../../components/ContactBody.astro';
 import { useTranslations, getLangFromUrl } from '../../i18n';
 const t = useTranslations(getLangFromUrl(Astro.url));
 ---
-<Layout title={`${t('blog.title')} — Sergio Herrero`} description={t('blog.subtitle')}>
+<Layout title={`${t('contact.title')} — Sergio Herrero`} description={t('contact.intro')}>
   <Nav />
-  <BlogList />
+  <ContactBody />
 </Layout>

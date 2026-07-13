@@ -7,44 +7,58 @@ import '@fontsource/inter/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
+import { getLangFromUrl, useTranslations, stripLangPrefix, localizePath, type Lang } from '../i18n';
 
 export interface Props {
   title?: string;
   description?: string;
-  lang?: string;
+  lang?: Lang;
 }
+
+const urlLang = getLangFromUrl(Astro.url);
+const t = useTranslations(urlLang);
 const {
-  title = 'Sergio Herrero — Senior SRE & Platform Engineer',
-  description = 'Senior SRE / Platform Engineer. 8+ años con Kubernetes, GCP, AWS, Terraform, Go. Construyo plataformas internas, IaC, observabilidad y FinOps.',
-  lang = 'es',
+  title = `${t('site.title')} — ${t('site.description')}`,
+  description = t('site.description'),
+  lang = urlLang,
 } = Astro.props;
+
+const site = Astro.site ?? new URL('https://sermanes.github.io');
+const basePath = stripLangPrefix(Astro.url.pathname);
+const esHref = new URL(localizePath(basePath, 'es'), site).href;
+const enHref = new URL(localizePath(basePath, 'en'), site).href;
 ---
 <!doctype html>
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="/theme-init.js" is:inline></script>
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index, follow" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" />
+    <link rel="alternate" hreflang="es" href={esHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={esHref} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
-  <body class="bg-bg text-fg font-sans antialiased selection:bg-accent/30">
+  <body class="bg-bg text-fg font-sans antialiased">
     <div class="fixed inset-0 -z-10 pointer-events-none">
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(57,217,138,0.08),transparent_50%)]"></div>
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(122,183,255,0.06),transparent_50%)]"></div>
-      <div class="absolute inset-0 opacity-[0.015] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:32px_32px]"></div>
+      <div class="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:32px_32px] text-fg"></div>
     </div>
     <slot />
+    <footer class="max-w-4xl mx-auto px-6 py-10 text-sm text-muted font-mono border-t border-border">
+      © {new Date().getFullYear()} Sergio Herrero — {t('footer.built')}
+    </footer>
   </body>
 </html>
 <style is:global>
   html { scrollbar-gutter: stable; }
-  ::selection { color: #0a0e14; }
+  ::selection { background: var(--color-accent); color: var(--color-bg); }
 </style>

@@ -1,6 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import Nav from '../components/Nav.astro';
+import { useTranslations, type Lang } from '../i18n';
 
 export interface Props {
   title: string;
@@ -8,11 +9,13 @@ export interface Props {
   pubDate: Date;
   updatedDate?: Date;
   tags: string[];
-  lang?: string;
+  lang?: Lang;
+  altPath?: string;
   rawBody?: string;
 }
 
-const { title, description, pubDate, updatedDate, tags, lang = 'en', rawBody = '' } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, lang = 'es', altPath, rawBody = '' } = Astro.props;
+const t = useTranslations(lang);
 
 const wordCount = rawBody.trim().split(/\s+/).filter(Boolean).length;
 const readingTime = Math.max(1, Math.round(wordCount / 200));
@@ -21,18 +24,18 @@ const fmt = (d: Date) =>
   d.toISOString().slice(0, 10);
 ---
 <Layout title={`${title} — Sergio Herrero`} description={description} lang={lang}>
-  <Nav />
+  <Nav altPath={altPath} />
   <main class="mx-auto max-w-3xl px-6 py-16">
     <article>
       <header class="mb-10 border-b border-border pb-8">
         <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted">
           <time datetime={pubDate.toISOString()}>{fmt(pubDate)}</time>
           <span aria-hidden="true">·</span>
-          <span>{readingTime} min read</span>
+          <span>{readingTime} {t('blog.readingTime')}</span>
           {updatedDate && (
             <>
               <span aria-hidden="true">·</span>
-              <span>updated {fmt(updatedDate)}</span>
+              <span>{t('blog.updated')} {fmt(updatedDate)}</span>
             </>
           )}
         </div>

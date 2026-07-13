@@ -1,0 +1,21 @@
+---
+import { getLangFromUrl, stripLangPrefix, localizePath, useTranslations, languages, type Lang } from '../i18n';
+
+interface Props { altPath?: string }
+const { altPath } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const t = useTranslations(lang);
+
+const base = stripLangPrefix(Astro.url.pathname);
+const href = altPath ?? localizePath(base, other);
+---
+<a
+  href={href}
+  class="text-sm font-medium text-muted hover:text-fg transition"
+  hreflang={other}
+  aria-label={languages[other]}
+>
+  {t('lang.switch')}
+</a>
