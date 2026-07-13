@@ -18,18 +18,4 @@ const t = useTranslations(getLangFromUrl(Astro.url));
   :global(:root:not([data-theme="dark"])) .light-hidden { display: none; }
 </style>
 
-<script>
-  const btn = document.getElementById('theme-toggle');
-  const sync = () => {
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    btn?.setAttribute('aria-pressed', String(dark));
-  };
-  sync();
-  btn?.addEventListener('click', () => {
-    const root = document.documentElement;
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-    sync();
-  });
-</script>
+<script is:inline src="/theme-toggle.js" defer></script>
