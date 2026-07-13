@@ -24,7 +24,7 @@ const {
   lang = urlLang,
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://sermanes.github.io');
+const site = Astro.site!;
 const basePath = stripLangPrefix(Astro.url.pathname);
 const esHref = new URL(localizePath(basePath, 'es'), site).href;
 const enHref = new URL(localizePath(basePath, 'en'), site).href;

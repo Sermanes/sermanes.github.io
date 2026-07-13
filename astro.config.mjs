@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://sermanes.github.io',
+  site: 'https://sregio.es',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
