@@ -3,6 +3,7 @@ import Intro from './Intro.astro';
 import BlogCard from './BlogCard.astro';
 import { getLangFromUrl, useTranslations, localizePath } from '../i18n';
 import { getPosts, postSlug } from '../lib/posts';
+import { socials } from '../data/socials';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -37,7 +38,8 @@ const posts = (await getPosts(lang)).slice(0, 3);
   <p class="text-muted leading-relaxed max-w-2xl mb-6">{t('about.intro')}</p>
   <div class="flex flex-wrap gap-4 text-sm">
     <a href={localizePath('/about', lang)} class="text-accent hover:text-accent2">{t('home.aboutMore')} →</a>
-    <a href="https://www.linkedin.com/in/sergioherrerocruz" target="_blank" rel="noopener" class="text-muted hover:text-fg">LinkedIn ↗</a>
-    <a href="https://github.com/sermanes" target="_blank" rel="noopener" class="text-muted hover:text-fg">GitHub ↗</a>
+    {socials.map((s) => (
+      <a href={s.href} target="_blank" rel="noopener" class="text-muted hover:text-fg">{s.label} <span aria-hidden="true">↗</span></a>
+    ))}
   </div>
 </section>
