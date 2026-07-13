@@ -24,6 +24,7 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="/theme-init.js" is:inline></script>
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
@@ -35,16 +36,14 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
-  <body class="bg-bg text-fg font-sans antialiased selection:bg-accent/30">
+  <body class="bg-bg text-fg font-sans antialiased">
     <div class="fixed inset-0 -z-10 pointer-events-none">
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(57,217,138,0.08),transparent_50%)]"></div>
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(122,183,255,0.06),transparent_50%)]"></div>
-      <div class="absolute inset-0 opacity-[0.015] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:32px_32px]"></div>
+      <div class="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:32px_32px] text-fg"></div>
     </div>
     <slot />
   </body>
 </html>
 <style is:global>
   html { scrollbar-gutter: stable; }
-  ::selection { color: #0a0e14; }
+  ::selection { background: var(--color-accent); color: var(--color-bg); }
 </style>
