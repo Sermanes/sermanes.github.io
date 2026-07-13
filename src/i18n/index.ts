@@ -28,9 +28,13 @@ export function stripLangPrefix(pathname: string): string {
   return pathname;
 }
 
-/** Build a locale-aware path. Default lang (es) has no prefix. */
+/**
+ * Build a locale-aware path. Default lang (es) has no prefix. Paths are
+ * normalized to a single trailing slash to match Astro's directory build
+ * format (and keep hreflang alternates consistent with internal links).
+ */
 export function localizePath(path: string, lang: Lang): string {
-  const clean = path.startsWith('/') ? path : `/${path}`;
-  if (lang === defaultLang) return clean;
-  return clean === '/' ? `/${lang}` : `/${lang}${clean}`;
+  let clean = path.startsWith('/') ? path : `/${path}`;
+  if (!clean.endsWith('/')) clean += '/';
+  return lang === defaultLang ? clean : `/${lang}${clean}`;
 }
