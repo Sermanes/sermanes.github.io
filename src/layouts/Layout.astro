@@ -7,16 +7,20 @@ import '@fontsource/inter/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
+import { getLangFromUrl, useTranslations, type Lang } from '../i18n';
 
 export interface Props {
   title?: string;
   description?: string;
-  lang?: string;
+  lang?: Lang;
 }
+
+const urlLang = getLangFromUrl(Astro.url);
+const t = useTranslations(urlLang);
 const {
-  title = 'Sergio Herrero — Senior SRE & Platform Engineer',
-  description = 'Senior SRE / Platform Engineer. 8+ años con Kubernetes, GCP, AWS, Terraform, Go. Construyo plataformas internas, IaC, observabilidad y FinOps.',
-  lang = 'es',
+  title = `${t('site.title')} — ${t('site.description')}`,
+  description = t('site.description'),
+  lang = urlLang,
 } = Astro.props;
 ---
 <!doctype html>
