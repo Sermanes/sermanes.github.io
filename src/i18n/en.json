@@ -23,7 +23,6 @@
   "about.intro": "8+ years operating Kubernetes platforms at scale and building internal developer platforms. IaC with Terraform/KCC, observability, FinOps, and custom tooling in Go, Python, and Bash.",
   "about.experience": "Experience",
   "about.stack": "Stack",
-  "about.present": "present",
   "contact.title": "Contact",
   "contact.intro": "Want to say hi or talk shop? Drop me a line.",
   "contact.email": "Email",
