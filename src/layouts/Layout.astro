@@ -8,6 +8,7 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/700.css';
 import { getLangFromUrl, useTranslations, stripLangPrefix, localizePath, type Lang } from '../i18n';
+import { socials } from '../data/socials';
 
 export interface Props {
   title?: string;
@@ -27,6 +28,27 @@ const site = Astro.site ?? new URL('https://sermanes.github.io');
 const basePath = stripLangPrefix(Astro.url.pathname);
 const esHref = new URL(localizePath(basePath, 'es'), site).href;
 const enHref = new URL(localizePath(basePath, 'en'), site).href;
+
+const canonicalURL = new URL(Astro.url.pathname, site);
+const ogImageURL = new URL('/og.png', site);
+const ogLocale = lang === 'en' ? 'en_US' : 'es_ES';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'Sergio Herrero',
+  url: site.href,
+  image: ogImageURL.href,
+  inLanguage: ['es', 'en'],
+  description: t('site.description'),
+  author: {
+    '@type': 'Person',
+    name: 'Sergio Herrero',
+    jobTitle: 'Site Reliability Engineer / Platform Engineer',
+    sameAs: socials.map((s) => s.href),
+  },
+  knowsAbout: ['Kubernetes', 'Google Cloud', 'AWS', 'Terraform', 'DevOps', 'SRE', 'FinOps', 'CI/CD', 'Go'],
+};
 ---
 <!doctype html>
 <html lang={lang} class="scroll-smooth">
@@ -38,15 +60,26 @@ const enHref = new URL(localizePath(basePath, 'en'), site).href;
     <meta name="description" content={description} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index, follow" />
+    <meta name="google-site-verification" content="rj3mrIBmR0Y9enoGjBle2iYigbgzZ8Y-zgTo4M5ponQ" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="alternate" hreflang="es" href={esHref} />
     <link rel="alternate" hreflang="en" href={enHref} />
     <link rel="alternate" hreflang="x-default" href={esHref} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <title>{title}</title>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
   <body class="bg-bg text-fg font-sans antialiased">
     <div class="fixed inset-0 -z-10 pointer-events-none">
