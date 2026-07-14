@@ -9,9 +9,9 @@ Hubo una época en la que pedir tres máquinas era un trámite administrativo.
 
 No exagero. Negocio decía que quería una aplicación nueva. Un analista recogía los requisitos y se los pasaba a un arquitecto, que dibujaba el despliegue: dos frontales, dos de backend, una base de datos, un balanceador. Ese diseño se convertía en una lista de hardware, y esa lista se convertía en un pedido a un proveedor. Y entonces empezaba la parte lenta: esperar.
 
-Semanas. A veces meses. Y cuando por fin llegaban las cajas, el proceso seguía: se montaba el hardware en el rack, se instalaba el sistema operativo, se configuraba la red, se asignaba el almacenamiento, se aplicaban las políticas de backup. Cada paso, además, esperando a que terminara el anterior. Solo al final de todo eso —y hablamos de un trimestre después de aquella primera reunión— se podía desplegar la aplicación.
+Semanas. A veces meses. Y cuando por fin llegaban las cajas, el proceso seguía: se montaba el hardware en el rack, se instalaba el sistema operativo, se configuraba la red, se asignaba el almacenamiento, se aplicaban las políticas de backup. Cada paso, además, esperando a que terminara el anterior. Solo al final de todo eso (y hablamos de un trimestre después de aquella primera reunión) se podía desplegar la aplicación.
 
-Y aquí toca ser honesto: esa parte yo casi no la viví. Cuando entré, la nube ya estaba aquí. Del ciclo completo —el pedido al proveedor, las cajas, el racking— me llegaron sobre todo las historias de los que sí lo sufrieron, y algún resto arqueológico en el CPD que todavía había que mantener. Tuve suerte.
+Y aquí toca ser honesto: esa parte yo casi no la viví. Cuando entré, la nube ya estaba aquí. Del ciclo completo (el pedido al proveedor, las cajas, el racking) me llegaron sobre todo las historias de los que sí lo sufrieron, y algún resto arqueológico en el CPD que todavía había que mantener. Tuve suerte.
 
 Lo que sí me tocó fue lo de después: máquinas virtuales, snapshots y mucha configuración a mano.
 
@@ -19,7 +19,7 @@ Lo que sí me tocó fue lo de después: máquinas virtuales, snapshots y mucha c
 
 El problema serio era que **nadie sabía cómo estaban configurados los servidores**. Y no por dejadez: por construcción.
 
-Piensa en cómo se clonaba una máquina. Levantabas una a mano, la dejabas fina —paquetes, usuarios, límites del kernel, el agente de monitorización, las rutas de los logs—, y cuando funcionaba, sacabas un snapshot. Esa era la imagen buena, la definitiva, de la que saldrían las once siguientes.
+Piensa en cómo se clonaba una máquina. Levantabas una a mano, la dejabas fina (paquetes, usuarios, límites del kernel, el agente de monitorización, las rutas de los logs) y, cuando funcionaba, sacabas un snapshot. Esa era la imagen buena, la definitiva, de la que saldrían las once siguientes.
 
 En teoría. Porque luego mirabas la lista de snapshots y te encontrabas con `base-web-v1`, `base-web-v2`, `base-web-definitiva`, `base-web-definitiva-OK`, `base-web-definitiva-BUENA-usar-esta`. Y ninguno de los cinco tenía una nota explicando en qué se diferenciaba del anterior. La imagen definitiva nunca era la última; era la que el compañero del turno anterior te dijo de palabra que usaras.
 
@@ -37,11 +37,11 @@ A eso hay que sumarle el otro pecado del modelo: como pedir hardware tardaba mes
 
 ## La nube no arregló el problema. Lo movió de sitio.
 
-Llegaron AWS, Azure y GCP y aquello cambió de verdad. Nada de esperar al proveedor: una VM en minutos. Nada de racks, ni de discos, ni de cableado. Y —esto es lo importante— **una API detrás de todo**.
+Llegaron AWS, Azure y GCP y aquello cambió de verdad. Nada de esperar al proveedor: una VM en minutos. Nada de racks, ni de discos, ni de cableado. Y, esto es lo importante, **una API detrás de todo**.
 
 Pero mira lo que hicimos con esa API el primer día: abrir la consola web y darle a los botones.
 
-Y ahí está la contradicción. La nube te vende elasticidad: crea y destruye cuando quieras, escala con la demanda. Pero si cada creación es un humano haciendo clic en un formulario —lo que se acabó llamando **ClickOps**—, has recreado el problema anterior con mejor latencia: nadie sabe por qué la instancia de staging tiene un disco de 200 GB y la de producción de 100, no puedes revisar un cambio antes de que ocurra, y las doce máquinas siguen sin poder describirse sin entrar a mirarlas. Lo único que ha mejorado es la velocidad a la que te equivocas.
+Y ahí está la contradicción. La nube te vende elasticidad: crea y destruye cuando quieras, escala con la demanda. Pero si cada creación es un humano haciendo clic en un formulario (lo que se acabó llamando **ClickOps**), has recreado el problema anterior con mejor latencia: nadie sabe por qué la instancia de staging tiene un disco de 200 GB y la de producción de 100, no puedes revisar un cambio antes de que ocurra, y las doce máquinas siguen sin poder describirse sin entrar a mirarlas. Lo único que ha mejorado es la velocidad a la que te equivocas.
 
 ## El siguiente intento: scripts
 
@@ -131,6 +131,6 @@ Tres ideas que me llevo de todo esto:
 - **La nube no lo arregló sola.** Aprovisionar a golpe de clic en la consola resuelve la espera, pero mantiene intactos el trabajo manual, la inconsistencia y el no saber qué hay montado. Más rápido, sí, pero igual de opaco.
 - **Lo que cambia el juego es declarar en vez de ordenar.** Describes el estado que quieres, y la herramienta calcula cómo llegar. El código pasa a ser la fuente de verdad, y `plan` te enseña las consecuencias antes de aplicarlas.
 
-Terraform no es magia: es un binario, unos providers y un ciclo de `init`, `plan` y `apply`. Tampoco es la única opción: OpenTofu, Pulumi, CloudFormation o Crossplane juegan en la misma liga, cada una con sus matices. He tirado de Terraform simplemente porque es la más extendida, pero la idea de fondo —declarar en vez de ordenar— es la misma en todas.
+Terraform no es magia: es un binario, unos providers y un ciclo de `init`, `plan` y `apply`. Tampoco es la única opción: OpenTofu, Pulumi, CloudFormation o Crossplane juegan en la misma liga, cada una con sus matices. He tirado de Terraform simplemente porque es la más extendida, pero la idea de fondo, declarar en vez de ordenar, es la misma en todas.
 
 Y esa idea es la que importa. Después de años tirando de snapshots y de paneles de Terminator, poder abrir un fichero y *leer* lo que hay montado sigue pareciéndome un cambio enorme.

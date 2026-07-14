@@ -11,17 +11,17 @@ There was a time when asking for three machines was a piece of paperwork.
 
 I'm not exaggerating. The business wanted a new application. An analyst gathered the requirements and handed them to an architect, who drew up the deployment: two front-end servers, two back-end, a database, a load balancer. That design became a hardware list, and that list became a purchase order. And then the slow part began: waiting.
 
-Weeks. Sometimes months. And when the boxes finally arrived, the process carried on: rack the hardware, install the operating system, configure the network, allocate the storage, apply the backup policies. Each step waiting on the one before it. Only at the end of all that — a full quarter after that first meeting — could the application be deployed.
+Weeks. Sometimes months. And when the boxes finally arrived, the process carried on: rack the hardware, install the operating system, configure the network, allocate the storage, apply the backup policies. Each step waiting on the one before it. Only at the end of all that (a full quarter after that first meeting) could the application be deployed.
 
-And here's where I should be honest: I barely lived through that part. By the time I started, the cloud was already here. Of the full cycle — the purchase order, the boxes, the racking — what mostly reached me were the war stories of the people who did suffer it, plus some archaeological leftovers in the data centre that still needed maintaining. I got lucky.
+And here's where I should be honest: I barely lived through that part. By the time I started, the cloud was already here. Of the full cycle (the purchase order, the boxes, the racking) what mostly reached me were the war stories of the people who did suffer it, plus some archaeological leftovers in the data centre that still needed maintaining. I got lucky.
 
 What I did get was everything after that: virtual machines, snapshots and a lot of hand-editing configuration.
 
 ## What actually hurt
 
-The serious problem was that **nobody knew how the servers were configured**. Not out of sloppiness — by construction.
+The serious problem was that **nobody knew how the servers were configured**. Not out of sloppiness: by construction.
 
-Think about how you cloned a machine back then. You built one by hand, got it just right — packages, users, kernel limits, the monitoring agent, the log paths — and once it worked, you took a snapshot. That was the good one, the final one, the one the next eleven machines would come out of.
+Think about how you cloned a machine back then. You built one by hand, got it just right (packages, users, kernel limits, the monitoring agent, the log paths) and, once it worked, you took a snapshot. That was the good one, the final one, the one the next eleven machines would come out of.
 
 In theory. Because then you'd look at the snapshot list and find `base-web-v1`, `base-web-v2`, `base-web-final`, `base-web-final-OK`, `base-web-final-GOOD-use-this-one`. And not one of the five had a note explaining how it differed from the last. The final image was never the most recent one; it was whichever one the guy on the previous shift told you to use, out loud.
 
@@ -31,7 +31,7 @@ On day 30 a CVE dropped. And that's when you found the trap: the snapshot was al
 
 So you did the only thing you could: SSH into all twelve. And to stay sane, you opened **Terminator**, split the window into twelve panes, turned on broadcast, and typed once so that every keystroke landed in all twelve sessions at the same time.
 
-That wasn't automation — it was typing faster. All it took was one `sudo` in the wrong pane, or one machine that wasn't in exactly the same state as the other eleven, and broadcast applied your mistake to all twelve at once.
+That wasn't automation: it was typing faster. All it took was one `sudo` in the wrong pane, or one machine that wasn't in exactly the same state as the other eleven, and broadcast applied your mistake to all twelve at once.
 
 And underneath all of it sat an uncomfortable truth: **the real state of your infrastructure only existed inside the machines**. It didn't exist in any document, any repository, anywhere you could read, review or diff. It existed on twelve disks, and to query it you had to go in and ask each one.
 
@@ -39,15 +39,15 @@ Then there was the model's other sin: because ordering hardware took months, you
 
 ## The cloud didn't fix the problem. It moved it.
 
-AWS, Azure and GCP showed up, and things genuinely changed. No waiting on a vendor: a VM in minutes. No racks, no disks, no cabling. And — this is the part that matters — **an API behind everything**.
+AWS, Azure and GCP showed up, and things genuinely changed. No waiting on a vendor: a VM in minutes. No racks, no disks, no cabling. And, this is the part that matters, **an API behind everything**.
 
 But look at what we did with that API on day one: we opened the web console and started clicking.
 
-And there's the contradiction. The cloud sells you elasticity: create and destroy at will, scale with demand. But if every creation is a human clicking through a form — what ended up being called **ClickOps** — you have recreated the same old problem with better latency: nobody knows why the staging instance has a 200 GB disk and production has 100, you can't review a change before it happens, and the twelve machines still can't be described without logging in to look. The only thing that improved is how fast you can get it wrong.
+And there's the contradiction. The cloud sells you elasticity: create and destroy at will, scale with demand. But if every creation is a human clicking through a form (what ended up being called **ClickOps**), you have recreated the same old problem with better latency: nobody knows why the staging instance has a 200 GB disk and production has 100, you can't review a change before it happens, and the twelve machines still can't be described without logging in to look. The only thing that improved is how fast you can get it wrong.
 
 ## The next attempt: scripts
 
-The natural reaction was obvious: if there's an API, write scripts that call it. Bash with `gcloud`. Python with the SDK. And it worked — up to a point.
+The natural reaction was obvious: if there's an API, write scripts that call it. Bash with `gcloud`. Python with the SDK. And it worked, up to a point.
 
 Right up until you ran the script twice.
 
@@ -61,7 +61,7 @@ The idea that changes everything is to stop issuing commands and start describin
 
 Instead of saying *"create an instance"*, you say *"I want this instance to exist, like this"*. And you let the tool work out what to do to get there: create it if it doesn't exist, modify it if it differs, leave it alone if it's already right.
 
-That's infrastructure as code, and that's what Terraform does. It ships as a single binary and talks to platforms through **providers** — plugins that translate to each platform's API. And it's not just clouds: there are providers for GCP, AWS and Azure, of course, but also for DNS, Cloudflare, Datadog, GitHub, PostgreSQL and Auth0. If it has an API, it can be declared.
+That's infrastructure as code, and that's what Terraform does. It ships as a single binary and talks to platforms through **providers**, plugins that translate to each platform's API. And it's not just clouds: there are providers for GCP, AWS and Azure, of course, but also for DNS, Cloudflare, Datadog, GitHub, PostgreSQL and Auth0. If it has an API, it can be declared.
 
 A GCP instance is described like this:
 
@@ -130,9 +130,9 @@ None of the earlier ways of working had that. Not the console, not the scripts, 
 Three things I take away from all this:
 
 - **The problem was never how slow the hardware was.** It was that the real state of the infrastructure only existed inside the machines, with no way to read it, review it or diff it without logging into each one.
-- **The cloud didn't fix it on its own.** Provisioning by clicking through a console solves the waiting, but leaves the manual work, the inconsistency and the not-knowing-what's-running entirely intact. Faster, sure — just as opaque.
+- **The cloud didn't fix it on its own.** Provisioning by clicking through a console solves the waiting, but leaves the manual work, the inconsistency and the not-knowing-what's-running entirely intact. Faster, sure, but just as opaque.
 - **What changes the game is declaring instead of commanding.** You describe the state you want, and the tool works out how to get there. The code becomes the source of truth, and `plan` shows you the consequences before you apply them.
 
-Terraform isn't magic: it's a binary, some providers, and a cycle of `init`, `plan` and `apply`. It isn't the only option either: OpenTofu, Pulumi, CloudFormation and Crossplane play in the same league, each with its own trade-offs. I went with Terraform simply because it's the most widely used, but the underlying idea — declaring instead of commanding — is the same in all of them.
+Terraform isn't magic: it's a binary, some providers, and a cycle of `init`, `plan` and `apply`. It isn't the only option either: OpenTofu, Pulumi, CloudFormation and Crossplane play in the same league, each with its own trade-offs. I went with Terraform simply because it's the most widely used, but the underlying idea, declaring instead of commanding, is the same in all of them.
 
 And that idea is what matters. After years of juggling snapshots and Terminator panes, being able to open a file and *read* what's running still strikes me as an enormous change.

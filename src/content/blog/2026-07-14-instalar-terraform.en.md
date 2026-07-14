@@ -1,6 +1,6 @@
 ---
 title: 'Installing Terraform: binary, apt and Docker (with a Makefile)'
-description: 'Three ways to install Terraform on Linux — the official binary, the HashiCorp apt repository and Docker — plus a Makefile that turns the Docker command into a simple make plan.'
+description: 'Three ways to install Terraform on Linux (the official binary, the HashiCorp apt repository and Docker) plus a Makefile that turns the Docker command into a simple make plan.'
 pubDate: 2026-07-14
 tags: ['terraform', 'iac', 'docker', 'linux']
 ---
@@ -59,7 +59,7 @@ This is the option I use on my laptop. The problem comes when you work on severa
 
 ## Option 3: Docker
 
-HashiCorp publishes an official image with the binary inside. If you already have Docker on the machine — and if you work in this field, you do — you don't need to install Terraform at all:
+HashiCorp publishes an official image with the binary inside. If you already have Docker on the machine (and if you work in this field, you do), you don't need to install Terraform at all:
 
 ```bash
 docker run --rm -it -v "$PWD":/workspace -w /workspace hashicorp/terraform:1.15 version
@@ -149,7 +149,7 @@ make apply   # creates it (type "yes" when asked)
 cat pets.txt # We love pets!
 ```
 
-Since the directory is mounted inside the container, both `pets.txt` and the state file `terraform.tfstate` end up in the lab directory — they don't stay inside the container.
+Since the directory is mounted inside the container, both `pets.txt` and the state file `terraform.tfstate` end up in the lab directory; they don't stay inside the container.
 
 ### Final step: cleanup
 

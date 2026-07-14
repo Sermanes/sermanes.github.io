@@ -1,6 +1,6 @@
 ---
 title: 'Instalar Terraform: binario, apt y Docker (con Makefile)'
-description: 'Tres formas de instalar Terraform en Linux —el binario oficial, el repositorio apt de HashiCorp y Docker— y un Makefile que reduce el comando de Docker a un simple make plan.'
+description: 'Tres formas de instalar Terraform en Linux (el binario oficial, el repositorio apt de HashiCorp y Docker) y un Makefile que reduce el comando de Docker a un simple make plan.'
 pubDate: 2026-07-14
 tags: ['terraform', 'iac', 'docker', 'linux']
 ---
@@ -57,7 +57,7 @@ Esta es la opción que uso en mi portátil. El problema llega cuando trabajas en
 
 ## Opción 3: Docker
 
-HashiCorp publica una imagen oficial con el binario dentro. Si ya tienes Docker en la máquina —y si trabajas en esto, lo tienes—, no necesitas instalar Terraform en absoluto:
+HashiCorp publica una imagen oficial con el binario dentro. Si ya tienes Docker en la máquina (y si trabajas en esto, lo tienes), no necesitas instalar Terraform en absoluto:
 
 ```bash
 docker run --rm -it -v "$PWD":/workspace -w /workspace hashicorp/terraform:1.15 version
