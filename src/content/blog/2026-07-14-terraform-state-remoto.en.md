@@ -1,7 +1,7 @@
 ---
 title: 'Remote state in Terraform: a bucket, a lock, and no more stepping on each other'
 description: "What Terraform's state file is, why keeping it on your laptop doesn't scale in a team, and how to move it to a Google Cloud Storage bucket with locking so two people can't apply changes at the same time."
-pubDate: 2026-07-14
+pubDate: 2026-07-14T12:00:00
 tags: ['terraform', 'iac', 'gcp', 'teams']
 ---
 

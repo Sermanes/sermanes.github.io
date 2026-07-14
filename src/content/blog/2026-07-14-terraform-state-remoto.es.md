@@ -1,7 +1,7 @@
 ---
 title: 'State remoto en Terraform: un bucket, un lock y adiós a pisarse el trabajo'
 description: 'Qué es el fichero de estado de Terraform, por qué guardarlo en local no escala en un equipo, y cómo moverlo a un bucket de Google Cloud Storage con locking para que dos personas no puedan aplicar cambios a la vez.'
-pubDate: 2026-07-14
+pubDate: 2026-07-14T12:00:00
 tags: ['terraform', 'iac', 'gcp', 'equipos']
 ---
 
