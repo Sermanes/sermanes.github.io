@@ -75,13 +75,15 @@ The downside is obvious too: nobody wants to type `docker run --rm -it -v "$PWD"
 
 ## Using Make
 
-A Makefile at the root of the project:
+Each exercise in this series will live in its own folder under `labs/`, and they all need the same commands. To avoid duplicating them in every folder, the logic lives once in a `terraform.mk` file at the root of the repository:
 
 ```makefile
+# terraform.mk
 TF_VERSION ?= 1.15
-LAB        ?= labs/01-installing-terraform
 TF_IMAGE   := hashicorp/terraform:$(TF_VERSION)
-TF_RUN     := docker run --rm -it -v "$(PWD)":/workspace -w /workspace/$(LAB) $(TF_IMAGE)
+TF_RUN     := docker run --rm -it \
+	-v "$(CURDIR)":/workspace -w /workspace \
+	$(TF_IMAGE)
 
 .PHONY: init plan apply destroy fmt validate version help
 
@@ -107,21 +109,28 @@ version: ## Terraform version inside the container
 	$(TF_RUN) version
 
 help: ## Show this help
-	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "} {printf "%-10s %s\n", $$1, $$2}'
+	@grep -hE '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "} {printf "%-10s %s\n", $$1, $$2}'
 ```
 
-From here on, day-to-day work is `make plan` and `make apply`. There are two variables defined with `?=`, so they can be overridden without editing the file. `TF_VERSION` pins the Terraform version — useful for trying a new one before actually switching — and `LAB` selects the directory to run in, because each exercise in this series will live in its own folder under `labs/`:
+The `.mk` extension is a convention for Makefile fragments meant to be imported from others, and that's exactly what each lab does: it has its own one-line `Makefile`.
+
+```makefile
+include ../../terraform.mk
+```
+
+From here on, day-to-day work is cd-ing into the lab folder and running `make plan` or `make apply` there. `$(CURDIR)` is the directory make runs from, so the container mounts exactly the lab you're in. And if an exercise needs something special, it adds it in its own Makefile after the `include` without touching the others.
+
+`TF_VERSION` is defined with `?=`, so it can be overridden without editing the file, useful for trying a new version before actually switching:
 
 ```bash
 make plan TF_VERSION=1.16
-make plan LAB=labs/02-another-exercise
 ```
 
 And the `help` target reads the `##` comments on each rule, so `make help` prints the list of available commands without maintaining separate documentation.
 
 ## Checking that everything works
 
-To test the installation you don't need a GCP or AWS account. The `local` provider creates files on disk, so it lets you try Terraform without depending on anything external. A `main.tf` in `labs/01-installing-terraform/`, the directory the Makefile points to by default:
+To test the installation you don't need a GCP or AWS account. The `local` provider creates files on disk, so it lets you try Terraform without depending on anything external. A `main.tf` in `labs/01-installing-terraform/`:
 
 ```hcl
 resource "local_file" "pet" {
@@ -133,10 +142,11 @@ resource "local_file" "pet" {
 And the full cycle we saw in the previous post:
 
 ```bash
+cd labs/01-installing-terraform
 make init    # downloads the local provider
 make plan    # "1 to add": it will create pets.txt
 make apply   # creates it (type "yes" when asked)
-cat labs/01-installing-terraform/pets.txt   # We love pets!
+cat pets.txt # We love pets!
 ```
 
 Since the directory is mounted inside the container, both `pets.txt` and the state file `terraform.tfstate` end up in the lab directory — they don't stay inside the container.
@@ -149,7 +159,7 @@ Undoing the test takes one command: it destroys everything declared in the confi
 make destroy
 ```
 
-I've left this Makefile, along with the example, in my [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero) repository, which I'll keep extending with the rest of the posts in this series.
+I've left the `terraform.mk`, along with the example, in my [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero) repository, which I'll keep extending with the rest of the posts in this series.
 
 ## In summary
 

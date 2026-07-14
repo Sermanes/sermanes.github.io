@@ -73,13 +73,15 @@ La pega también es evidente: nadie quiere teclear `docker run --rm -it -v "$PWD
 
 ## Usando Make
 
-Un Makefile en la raíz del proyecto:
+Cada ejercicio de esta serie va a vivir en su propia carpeta dentro de `labs/`, y todos necesitan los mismos comandos. Para no duplicarlos en cada carpeta, la lógica vive una sola vez en un fichero `terraform.mk` en la raíz del repositorio:
 
 ```makefile
+# terraform.mk
 TF_VERSION ?= 1.15
-LAB        ?= labs/01-installing-terraform
 TF_IMAGE   := hashicorp/terraform:$(TF_VERSION)
-TF_RUN     := docker run --rm -it -v "$(PWD)":/workspace -w /workspace/$(LAB) $(TF_IMAGE)
+TF_RUN     := docker run --rm -it \
+	-v "$(CURDIR)":/workspace -w /workspace \
+	$(TF_IMAGE)
 
 .PHONY: init plan apply destroy fmt validate version help
 
@@ -105,21 +107,28 @@ version: ## Versión de Terraform dentro del contenedor
 	$(TF_RUN) version
 
 help: ## Muestra esta ayuda
-	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "} {printf "%-10s %s\n", $$1, $$2}'
+	@grep -hE '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "} {printf "%-10s %s\n", $$1, $$2}'
 ```
 
-A partir de aquí el día a día es `make plan` y `make apply`. Hay dos variables definidas con `?=`, así que se pueden sobreescribir sin editar el fichero. `TF_VERSION` fija la versión de Terraform — útil para probar una nueva antes de cambiarla de verdad — y `LAB` indica en qué directorio se ejecuta, porque cada ejercicio de esta serie va a vivir en su propia carpeta dentro de `labs/`:
+La extensión `.mk` es una convención para fragmentos de Makefile pensados para importarse desde otros, y eso es justo lo que hace cada lab: tener su propio `Makefile` de una sola línea.
+
+```makefile
+include ../../terraform.mk
+```
+
+A partir de aquí el día a día es entrar en la carpeta del lab y ejecutar `make plan` o `make apply` ahí. `$(CURDIR)` es el directorio desde el que se ejecuta make, así que el contenedor monta exactamente el lab en el que estás. Y si un ejercicio necesita algo especial, lo añade en su Makefile después del `include` sin tocar a los demás.
+
+`TF_VERSION` está definida con `?=`, así que se puede sobreescribir sin editar el fichero, útil para probar una versión nueva antes de cambiarla de verdad:
 
 ```bash
 make plan TF_VERSION=1.16
-make plan LAB=labs/02-otro-ejercicio
 ```
 
 Y el target `help` lee los comentarios `##` de cada regla, de forma que `make help` imprime la lista de comandos disponibles sin mantener documentación aparte.
 
 ## Comprobar que todo funciona
 
-Para probar la instalación no hace falta una cuenta de GCP ni de AWS. El provider `local` crea ficheros en disco, así que sirve para probar Terraform sin depender de nada externo. Un `main.tf` en `labs/01-installing-terraform/`, el directorio al que apunta el Makefile por defecto:
+Para probar la instalación no hace falta una cuenta de GCP ni de AWS. El provider `local` crea ficheros en disco, así que sirve para probar Terraform sin depender de nada externo. Un `main.tf` en `labs/01-installing-terraform/`:
 
 ```hcl
 resource "local_file" "pet" {
@@ -131,10 +140,11 @@ resource "local_file" "pet" {
 Y el ciclo completo que vimos en el post anterior:
 
 ```bash
+cd labs/01-installing-terraform
 make init    # descarga el provider local
 make plan    # "1 to add": va a crear pets.txt
 make apply   # lo crea (escribe "yes" cuando pregunte)
-cat labs/01-installing-terraform/pets.txt   # We love pets!
+cat pets.txt # We love pets!
 ```
 
 Como el directorio está montado dentro del contenedor, tanto `pets.txt` como el fichero de estado `terraform.tfstate` aparecen en el directorio del lab, no se quedan dentro del contenedor.
@@ -147,7 +157,7 @@ Para deshacer las pruebas basta con un comando: destruye todo lo declarado en la
 make destroy
 ```
 
-He dejado este Makefile, junto al ejemplo, en mi repositorio [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero), que iré ampliando con el resto de posts de la serie.
+He dejado el `terraform.mk`, junto al ejemplo, en mi repositorio [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero), que iré ampliando con el resto de posts de la serie.
 
 ## En resumen
 
