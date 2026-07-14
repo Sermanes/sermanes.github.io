@@ -77,8 +77,9 @@ Un Makefile en la raíz del proyecto:
 
 ```makefile
 TF_VERSION ?= 1.15
+LAB        ?= labs/01-installing-terraform
 TF_IMAGE   := hashicorp/terraform:$(TF_VERSION)
-TF_RUN     := docker run --rm -it -v "$(PWD)":/workspace -w /workspace $(TF_IMAGE)
+TF_RUN     := docker run --rm -it -v "$(PWD)":/workspace -w /workspace/$(LAB) $(TF_IMAGE)
 
 .PHONY: init plan apply destroy fmt validate version help
 
@@ -107,17 +108,18 @@ help: ## Muestra esta ayuda
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "} {printf "%-10s %s\n", $$1, $$2}'
 ```
 
-A partir de aquí el día a día es `make plan` y `make apply`. La versión está definida en una variable con `?=`, así que se puede sobreescribir sin editar el fichero — útil para probar una versión nueva antes de cambiarla de verdad:
+A partir de aquí el día a día es `make plan` y `make apply`. Hay dos variables definidas con `?=`, así que se pueden sobreescribir sin editar el fichero. `TF_VERSION` fija la versión de Terraform — útil para probar una nueva antes de cambiarla de verdad — y `LAB` indica en qué directorio se ejecuta, porque cada ejercicio de esta serie va a vivir en su propia carpeta dentro de `labs/`:
 
 ```bash
 make plan TF_VERSION=1.16
+make plan LAB=labs/02-otro-ejercicio
 ```
 
 Y el target `help` lee los comentarios `##` de cada regla, de forma que `make help` imprime la lista de comandos disponibles sin mantener documentación aparte.
 
 ## Comprobar que todo funciona
 
-Para probar la instalación no hace falta una cuenta de GCP ni de AWS. El provider `local` crea ficheros en disco, así que sirve para probar Terraform sin depender de nada externo. Un `main.tf` junto al Makefile:
+Para probar la instalación no hace falta una cuenta de GCP ni de AWS. El provider `local` crea ficheros en disco, así que sirve para probar Terraform sin depender de nada externo. Un `main.tf` en `labs/01-installing-terraform/`, el directorio al que apunta el Makefile por defecto:
 
 ```hcl
 resource "local_file" "pet" {
@@ -129,13 +131,13 @@ resource "local_file" "pet" {
 Y el ciclo completo que vimos en el post anterior:
 
 ```bash
-make init      # descarga el provider local
-make plan      # "1 to add": va a crear pets.txt
-make apply     # lo crea (escribe "yes" cuando pregunte)
-cat pets.txt   # We love pets!
+make init    # descarga el provider local
+make plan    # "1 to add": va a crear pets.txt
+make apply   # lo crea (escribe "yes" cuando pregunte)
+cat labs/01-installing-terraform/pets.txt   # We love pets!
 ```
 
-Como el directorio está montado dentro del contenedor, tanto `pets.txt` como el fichero de estado `terraform.tfstate` aparecen en el directorio del proyecto, no se quedan dentro del contenedor.
+Como el directorio está montado dentro del contenedor, tanto `pets.txt` como el fichero de estado `terraform.tfstate` aparecen en el directorio del lab, no se quedan dentro del contenedor.
 
 ### Paso final: limpieza
 

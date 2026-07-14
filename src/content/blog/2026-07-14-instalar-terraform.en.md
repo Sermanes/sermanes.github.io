@@ -79,8 +79,9 @@ A Makefile at the root of the project:
 
 ```makefile
 TF_VERSION ?= 1.15
+LAB        ?= labs/01-installing-terraform
 TF_IMAGE   := hashicorp/terraform:$(TF_VERSION)
-TF_RUN     := docker run --rm -it -v "$(PWD)":/workspace -w /workspace $(TF_IMAGE)
+TF_RUN     := docker run --rm -it -v "$(PWD)":/workspace -w /workspace/$(LAB) $(TF_IMAGE)
 
 .PHONY: init plan apply destroy fmt validate version help
 
@@ -109,17 +110,18 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "} {printf "%-10s %s\n", $$1, $$2}'
 ```
 
-From here on, day-to-day work is `make plan` and `make apply`. The version is defined in a variable with `?=`, so it can be overridden without editing the file — useful for trying a new version before actually switching:
+From here on, day-to-day work is `make plan` and `make apply`. There are two variables defined with `?=`, so they can be overridden without editing the file. `TF_VERSION` pins the Terraform version — useful for trying a new one before actually switching — and `LAB` selects the directory to run in, because each exercise in this series will live in its own folder under `labs/`:
 
 ```bash
 make plan TF_VERSION=1.16
+make plan LAB=labs/02-another-exercise
 ```
 
 And the `help` target reads the `##` comments on each rule, so `make help` prints the list of available commands without maintaining separate documentation.
 
 ## Checking that everything works
 
-To test the installation you don't need a GCP or AWS account. The `local` provider creates files on disk, so it lets you try Terraform without depending on anything external. A `main.tf` next to the Makefile:
+To test the installation you don't need a GCP or AWS account. The `local` provider creates files on disk, so it lets you try Terraform without depending on anything external. A `main.tf` in `labs/01-installing-terraform/`, the directory the Makefile points to by default:
 
 ```hcl
 resource "local_file" "pet" {
@@ -131,13 +133,13 @@ resource "local_file" "pet" {
 And the full cycle we saw in the previous post:
 
 ```bash
-make init      # downloads the local provider
-make plan      # "1 to add": it will create pets.txt
-make apply     # creates it (type "yes" when asked)
-cat pets.txt   # We love pets!
+make init    # downloads the local provider
+make plan    # "1 to add": it will create pets.txt
+make apply   # creates it (type "yes" when asked)
+cat labs/01-installing-terraform/pets.txt   # We love pets!
 ```
 
-Since the directory is mounted inside the container, both `pets.txt` and the state file `terraform.tfstate` end up in the project directory — they don't stay inside the container.
+Since the directory is mounted inside the container, both `pets.txt` and the state file `terraform.tfstate` end up in the lab directory — they don't stay inside the container.
 
 ### Final step: cleanup
 
