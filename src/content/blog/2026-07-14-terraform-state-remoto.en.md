@@ -140,4 +140,4 @@ The container uses your `gcloud` session's credentials without anything being wr
 - The state bucket gets configured once and properly: **versioning, no public access, and remember to encrypt it**.
 - A single bucket can serve the whole company by using a different `prefix` per project and environment.
 
-The full example from this post will go, like the previous ones, into the [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero) repository. In the next post of the series we'll talk about variables and how to structure a project for more than one environment without copy-pasting folders.
+The full example from this post lives, like the previous ones, in the [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero) repository, under `labs/02-remote-state`.

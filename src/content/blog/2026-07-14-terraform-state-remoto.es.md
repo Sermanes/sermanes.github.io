@@ -138,4 +138,4 @@ El contenedor usa las credenciales de tu sesión de `gcloud` sin que quede escri
 - El bucket del state se configura una vez y bien: **versionado, sin acceso público y acuérdate de cifrarlo**.
 - Un solo bucket puede servir a toda la empresa usando un `prefix` distinto por proyecto y entorno.
 
-El ejemplo completo de este post irá, como los anteriores, al repositorio [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero). En el próximo post de la serie tocará hablar de variables y de cómo estructurar un proyecto para más de un entorno sin copiar y pegar carpetas.
+El ejemplo completo de este post está, como los anteriores, en el repositorio [terraform-zero-to-hero](https://github.com/sermanes/terraform-zero-to-hero), en la carpeta `labs/02-remote-state`.
