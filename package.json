@@ -16,6 +16,7 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.9",
+    "rehype-external-links": "^3.0.0",
     "tailwindcss": "^4.2.4"
   }
 }
