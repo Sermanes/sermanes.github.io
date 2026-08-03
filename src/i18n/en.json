@@ -1,6 +1,6 @@
 {
   "site.title": "Sergio Herrero",
-  "site.description": "Personal blog on platform engineering, SRE, Go, and infrastructure.",
+  "site.description": "Personal blog on platform engineering, SRE, development, and infrastructure.",
   "nav.home": "Home",
   "nav.blog": "Blog",
   "nav.about": "About",
@@ -9,7 +9,7 @@
   "theme.toggle": "Toggle theme",
   "lang.switch": "Español",
   "home.role": "SRE / Platform Engineer",
-  "home.bio": "I'm Sergio Herrero. I write about platform engineering, SRE, Go, and infrastructure.",
+  "home.bio": "I'm Sergio Herrero. I write about platform engineering, SRE, development, and infrastructure.",
   "home.latest": "Latest writing",
   "home.viewAll": "View all",
   "home.aboutHeading": "About me",
