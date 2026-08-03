@@ -1,5 +1,6 @@
 ---
 import Intro from './Intro.astro';
+import Services from './Services.astro';
 import BlogCard from './BlogCard.astro';
 import { getLangFromUrl, useTranslations, localizePath } from '../i18n';
 import { getPosts, postSlug } from '../lib/posts';
@@ -10,6 +11,8 @@ const t = useTranslations(lang);
 const posts = (await getPosts(lang)).slice(0, 3);
 ---
 <Intro />
+
+<Services />
 
 {posts.length > 0 && (
   <section class="max-w-4xl mx-auto px-6 py-12">
